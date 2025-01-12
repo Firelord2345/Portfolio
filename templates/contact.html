@@ -1,0 +1,131 @@
+{% extends 'header.html' %}
+
+{% block extra_styles %}
+<style>
+    body {
+        background-color: #f4f4f9;
+        font-family: Arial, sans-serif;
+    }
+
+    .contact-form {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        /* Set a max width for medium size */
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .form-title {
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        box-shadow: none;
+    }
+
+    .form-control:focus {
+        border-color: #5cb85c;
+        box-shadow: 0 0 5px rgba(92, 184, 92, 0.5);
+    }
+
+    .btn-submit {
+        background-color: #5cb85c;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        border: none;
+    }
+
+    .btn-submit:hover {
+        background-color: #4cae4c;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8"> <!-- Make the form medium width -->
+            <div class="contact-form">
+                <h2 class="form-title">Contact Us</h2>
+                <form method="POST" action="{{ url_for('contact') }}">
+                    {{ form.hidden_tag() }} <!-- Renders hidden tag for CSRF token -->
+
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control", placeholder="Enter your name") }}
+                        {% if form.name.errors %}
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="Enter your email") }}
+                        {% if form.email.errors %}
+                        <div class="error-message">
+                            {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control", placeholder="Enter your phone number") }}
+                        {% if form.phone.errors %}
+                        <div class="error-message">
+                            {% for error in form.phone.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.message.label(class="form-label") }}
+                        {{ form.message(class="form-control", rows=4, placeholder="Enter your message here") }}
+                        {% if form.message.errors %}
+                        <div class="error-message">
+                            {% for error in form.message.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                    {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <button type="submit" class="btn-submit w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
