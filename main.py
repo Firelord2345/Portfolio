@@ -2,20 +2,25 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor, CKEditorField
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reviews.db'  # SQLite Database URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable Flask-SQLAlchemy modification tracking
-Bootstrap(app)
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+Bootstrap5(app)
 ckeditor = CKEditor(app)
 db = SQLAlchemy(app)
 
@@ -50,10 +55,11 @@ def contact():
             print(f"Error: {e}")
     return render_template('contact.html', form=form)
 
-# Email sending function (Traditional method using smtplib)
+# Email sending function (Using environment variables)
 def send_email(name, email, phone, message):
-    sender_email = 'joelroyskroys@gmail.com'
-    recipient_email = 'joelroyskroys@gmail.com'
+    sender_email = os.getenv('EMAIL_USER')
+    sender_password = os.getenv('EMAIL_PASSWORD')
+    recipient_email = sender_email  # Sending to yourself
     subject = "New Contact Form Message"
     body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage:\n{message}"
     
@@ -64,8 +70,8 @@ def send_email(name, email, phone, message):
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, 'ggms acnw sjdf hyty')  # Use app password here if 2FA enabled
+        with smtplib.SMTP_SSL(os.getenv('SMTP_SERVER'), int(os.getenv('SMTP_PORT'))) as server:
+            server.login(sender_email, sender_password)
             server.sendmail(sender_email, recipient_email, msg.as_string())
             print("Email sent successfully!")
     except Exception as e:

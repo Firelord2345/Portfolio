@@ -7,10 +7,8 @@ __pycache__/
 *.so
 # hidden files
 .env
-static\assets\your-icon.svg\github-142-svgrepo-com.svg
-static\assets\your-icon.svg\linkedin-svgrepo-com.svg
-static\assets\img\edit-bg.jpg
-static\assets\img\profile.jpeg
+static/assets/img/*
+
 
 
 # Distribution / packaging
