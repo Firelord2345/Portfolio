@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 db = SQLAlchemy(app)
-
+db.init_app(app)
 # Define the Review model (Table)
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
