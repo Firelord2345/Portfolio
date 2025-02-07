@@ -1,12 +1,61 @@
 {% extends 'header.html' %}
+
 {% block content %}
-<!-- Content Section with Bold Left-aligned Text -->
+<!-- Content Section with Typing Effect -->
 <div class="content">
-  <h1>Welcome to My Portfolio</h1>
-  <p>This is the place to showcase my skills and projects. Feel free to explore!</p>
+  <h1 class="animated-text">Welcome to My Portfolio</h1>
+  <p class="animated-text">This is the place to showcase my skills and projects. Feel free to explore!</p>
 </div>
+
+<style>
+  .animated-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 1.5em;
+      border-right: 2px solid white; /* Blinking cursor effect */
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      function typeEffect(element, text, speed, delay) {
+          let i = 0;
+          function type() {
+              if (i < text.length) {
+                  element.innerHTML = text.substring(0, i + 1); 
+                  i++;
+                  setTimeout(type, speed);
+              } else {
+                  setTimeout(() => eraseEffect(element, text, speed), delay);
+              }
+          }
+          type();
+      }
+
+      function eraseEffect(element, text, speed) {
+          let i = text.length;
+          function erase() {
+              if (i >= 0) {
+                  element.innerHTML = text.substring(0, i); 
+                  i--;
+                  setTimeout(erase, speed);
+              } else {
+                  setTimeout(() => typeEffect(element, text, speed, 1000), 500);
+              }
+          }
+          erase();
+      }
+
+      document.querySelectorAll(".animated-text").forEach((element) => {
+          let text = element.innerText;
+          element.innerHTML = ""; // Clear original text
+          setTimeout(() => typeEffect(element, text, 100, 1000), 500); // Start typing effect
+      });
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
+
 {% endblock %}
